@@ -605,3 +605,8 @@ h1 em { color: var(--gold); font-weight: 400; }
     transition-duration: .01ms !important;
   }
 }
+
+.empty-sky {
+  top: auto;
+  bottom: 55px;
+}
