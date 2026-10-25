@@ -1,257 +1,343 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+
 import {
   getFirestore,
   collection,
   addDoc,
-  serverTimestamp,
   onSnapshot,
   query,
-  orderBy
+  orderBy,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
-// STEP 1: Replace these placeholders with your Firebase config values.
+// Your Nihahaha Memorial Firebase project
 const firebaseConfig = {
   apiKey: "AIzaSyD-GGAkCwQzfmmFfhHhgHe9kqlXNFc-ilo",
   authDomain: "nihahaha-memorial.firebaseapp.com",
-  databaseURL: "https://nihahaha-memorial-default-rtdb.firebaseio.com",
   projectId: "nihahaha-memorial",
   storageBucket: "nihahaha-memorial.firebasestorage.app",
   messagingSenderId: "579027914898",
-  appId: "1:579027914898:web:b00d7cbf8ddb5b6500964b",
-  measurementId: "G-E726GXBG16"
+  appId: "1:579027914898:web:b00d7cbf8ddb5b6500964b"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const lettersCollection = collection(db, "letters");
 
-const starfield = document.getElementById("starfield");
-const sky = document.getElementById("sky");
-const starCount = document.getElementById("star-count");
+// Page elements
+const writeLetterButton = document.getElementById("writeLetterButton");
+const letterDialog = document.getElementById("letterDialog");
+const readDialog = document.getElementById("readDialog");
+const closeWriteButton = document.getElementById("closeWrite");
+const cancelWriteButton = document.getElementById("cancelWrite");
+const closeReadButton = document.getElementById("closeRead");
+const closeReadBottomButton = document.getElementById("closeReadBottom");
 
-const letterDialog = document.getElementById("letter-dialog");
-const writeDialog = document.getElementById("write-dialog");
+const letterForm = document.getElementById("letterForm");
+const letterMessage = document.getElementById("letterMessage");
+const senderName = document.getElementById("senderName");
+const anonymousToggle = document.getElementById("anonymousToggle");
+const sendButton = document.getElementById("sendButton");
+const formStatus = document.getElementById("formStatus");
+const characterCount = document.getElementById("characterCount");
 
-const letterTitle = document.getElementById("letter-title");
-const letterMessage = document.getElementById("letter-message");
-const letterSignature = document.getElementById("letter-signature");
+const starSky = document.getElementById("starSky");
+const starLayer = document.getElementById("starLayer");
+const skyLoading = document.getElementById("skyLoading");
+const emptySky = document.getElementById("emptySky");
+const letterCount = document.getElementById("letterCount");
+const starLabel = document.getElementById("starLabel");
 
-const letterForm = document.getElementById("letter-form");
-const senderInput = document.getElementById("sender");
-const messageInput = document.getElementById("message");
-const charCount = document.getElementById("char-count");
-const formStatus = document.getElementById("form-status");
-const toast = document.getElementById("toast");
+const readLetterText = document.getElementById("readLetterText");
+const readLetterSignature = document.getElementById("readLetterSignature");
 
-let letters = [];
-let toastTimeout;
+let lettersById = new Map();
+let sendingLetter = false;
 
-function makeDust() {
-  if (starfield.querySelector(".dust")) return;
-
-  const fragment = document.createDocumentFragment();
-
-  for (let i = 0; i < 150; i++) {
-    const dust = document.createElement("span");
-    dust.className = "dust";
-
-    dust.style.cssText = `
-      position:absolute;
-      left:${Math.random() * 100}%;
-      top:${Math.random() * 100}%;
-      width:${Math.random() > 0.8 ? 2 : 1}px;
-      height:${Math.random() > 0.8 ? 2 : 1}px;
-      border-radius:50%;
-      background:#dbe4ff;
-      opacity:${0.15 + Math.random() * 0.45};
-      pointer-events:none;
-    `;
-
-    fragment.appendChild(dust);
-  }
-
-  starfield.appendChild(fragment);
-}
-
-function createStar(letter, index, isNew = false) {
-  const star = document.createElement("button");
-  star.type = "button";
-  star.className = "star";
-
-  if (index % 3 === 0) star.classList.add("small");
-  if (isNew) star.classList.add("new-star");
-
-  const positions = [
-    [8, 25], [91, 23], [15, 51], [84, 48],
-    [5, 72], [95, 69], [24, 83], [75, 86],
-    [38, 76], [61, 79], [12, 91], [88, 92],
-    [32, 22], [70, 19], [48, 89]
-  ];
-
-  const [x, y] = positions[index % positions.length];
-
-  const offsetX = index >= positions.length
-    ? Math.random() * 10 - 5
-    : 0;
-
-  const offsetY = index >= positions.length
-    ? Math.random() * 8 - 4
-    : 0;
-
-  star.style.left = `${Math.max(3, Math.min(97, x + offsetX))}%`;
-  star.style.top = `${Math.max(12, Math.min(94, y + offsetY))}%`;
-  star.style.setProperty("--delay", `${Math.random() * 4}s`);
-
-  star.setAttribute("aria-label", "Read a letter for Nihahahaha");
-  star.title = "A letter is waiting here";
-
-  star.addEventListener("click", () => openLetter(letter));
-  sky.appendChild(star);
-
-  if (isNew) {
-    setTimeout(() => star.classList.remove("new-star"), 5000);
-  }
-
-  return star;
-}
-
-function updateCount() {
-  starCount.textContent = letters.length;
-}
-
-function openLetter(letter) {
-  letterTitle.textContent = letter.title || "A letter to you";
-  letterMessage.textContent = letter.message;
-
-  letterSignature.textContent = letter.sender
-    ? `With love, ${letter.sender}`
-    : "From someone who holds you in their heart";
-
+// Dialog controls
+writeLetterButton.addEventListener("click", () => {
+  setFormStatus("");
   letterDialog.showModal();
-}
+  window.setTimeout(() => letterMessage.focus(), 50);
+});
 
-function showToast(message) {
-  clearTimeout(toastTimeout);
-  toast.textContent = message;
-  toast.classList.add("visible");
+closeWriteButton.addEventListener("click", () => letterDialog.close());
+cancelWriteButton.addEventListener("click", () => letterDialog.close());
+closeReadButton.addEventListener("click", () => readDialog.close());
+closeReadBottomButton.addEventListener("click", () => readDialog.close());
 
-  toastTimeout = setTimeout(() => {
-    toast.classList.remove("visible");
-  }, 3500);
-}
-
-function openWriteForm() {
-  formStatus.textContent = "";
-  writeDialog.showModal();
-}
-
-function closeDialog(dialog) {
-  dialog.close();
-}
-
-function renderLetters() {
-  // Rebuild the starfield whenever Firebase sends updated letters.
-  sky.querySelectorAll(".star").forEach(star => star.remove());
-
-  letters.forEach((letter, index) => {
-    createStar(letter, index);
-  });
-
-  updateCount();
-}
-
-function listenForLetters() {
-  const lettersQuery = query(
-    collection(db, "letters"),
-    orderBy("createdAt", "desc")
-  );
-
-  onSnapshot(
-    lettersQuery,
-    (snapshot) => {
-      letters = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        title: "A letter for Nihahahaha",
-        message: doc.data().message,
-        sender: doc.data().sender || ""
-      }));
-
-      renderLetters();
-    },
-    (error) => {
-      console.error("Could not load letters:", error);
-      showToast("We couldn't load the letters. Please try again later.");
+// Close a dialog when someone clicks its backdrop
+for (const dialog of [letterDialog, readDialog]) {
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) {
+      dialog.close();
     }
-  );
+  });
 }
 
-document.getElementById("write-button")
-  .addEventListener("click", openWriteForm);
+// Keep the letter character count updated
+letterMessage.addEventListener("input", () => {
+  characterCount.textContent = `${letterMessage.value.length} / 3000`;
+});
 
-document.getElementById("explore-button")
-  .addEventListener("click", () => {
-    showToast("Choose any glowing star to read a letter ✧");
+// Anonymous letters do not include the visitor's name
+anonymousToggle.addEventListener("change", () => {
+  senderName.disabled = anonymousToggle.checked;
+
+  if (anonymousToggle.checked) {
+    senderName.setAttribute("aria-label", "Name not needed for anonymous letters");
+  } else {
+    senderName.removeAttribute("aria-label");
+  }
+});
+
+// Show form feedback accessibly
+function setFormStatus(message, type = "") {
+  formStatus.textContent = message;
+  formStatus.className = "form-status";
+
+  if (type) {
+    formStatus.classList.add(type);
+  }
+}
+
+// Generate a repeatable number from a letter ID.
+// This keeps a letter's star in the same position when new letters arrive.
+function hashString(value) {
+  let hash = 2166136261;
+
+  for (let i = 0; i < value.length; i += 1) {
+    hash ^= value.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+
+  return hash >>> 0;
+}
+
+function seededNumber(seed, offset) {
+  const value = Math.sin(seed * 12.9898 + offset * 78.233) * 43758.5453;
+  return value - Math.floor(value);
+}
+
+// Draw a star for each saved letter
+function renderStars() {
+  starLayer.replaceChildren();
+
+  const letters = Array.from(lettersById.values());
+
+  letterCount.textContent = String(letters.length);
+  starLabel.textContent = letters.length === 1 ? "letter" : "letters";
+
+  skyLoading.hidden = true;
+  emptySky.hidden = letters.length > 0;
+
+  letters.forEach((letter) => {
+    const seed = hashString(letter.id);
+
+    // Keep stars away from the very edge of the sky.
+    const left = 7 + seededNumber(seed, 1) * 86;
+    const top = 9 + seededNumber(seed, 2) * 82;
+    const size = 15 + seededNumber(seed, 3) * 12;
+    const twinkleSpeed = 2.2 + seededNumber(seed, 4) * 3.8;
+
+    const star = document.createElement("button");
+    star.type = "button";
+    star.className = "star-button";
+    star.style.left = `${left}%`;
+    star.style.top = `${top}%`;
+    star.style.setProperty("--star-size", `${size}px`);
+    star.style.setProperty("--twinkle-speed", `${twinkleSpeed}s`);
+
+    const sender = letter.sender || "Anonymous";
+    star.setAttribute("aria-label", `Read a letter from ${sender}`);
+
+    const glyph = document.createElement("span");
+    glyph.className = "star-glyph";
+    glyph.setAttribute("aria-hidden", "true");
+    glyph.textContent = "✦";
+
+    star.appendChild(glyph);
+
+    star.addEventListener("click", () => {
+      openLetter(letter.id);
+    });
+
+    starLayer.appendChild(star);
   });
+}
 
-document.getElementById("close-letter")
-  .addEventListener("click", () => closeDialog(letterDialog));
+// Open a letter when its star is clicked
+function openLetter(id) {
+  const letter = lettersById.get(id);
 
-document.getElementById("close-write")
-  .addEventListener("click", () => closeDialog(writeDialog));
+  if (!letter) {
+    return;
+  }
 
-letterDialog.addEventListener("click", (event) => {
-  if (event.target === letterDialog) letterDialog.close();
-});
+  // textContent keeps visitors' letters as text, not executable HTML.
+  readLetterText.textContent = letter.message;
+  readLetterSignature.textContent = letter.sender
+    ? `With love, ${letter.sender}`
+    : "With love, someone who remembers";
 
-writeDialog.addEventListener("click", (event) => {
-  if (event.target === writeDialog) writeDialog.close();
-});
+  readDialog.showModal();
+}
 
-messageInput.addEventListener("input", () => {
-  charCount.textContent = messageInput.value.length;
-});
+// Listen for letters stored in Firestore.
+// New submissions from other visitors appear automatically.
+const lettersQuery = query(
+  lettersCollection,
+  orderBy("createdAt", "desc")
+);
 
+onSnapshot(
+  lettersQuery,
+  (snapshot) => {
+    lettersById = new Map();
+
+    snapshot.forEach((documentSnapshot) => {
+      const data = documentSnapshot.data();
+
+      if (
+        typeof data.message === "string" &&
+        data.message.trim().length > 0
+      ) {
+        lettersById.set(documentSnapshot.id, {
+          id: documentSnapshot.id,
+          message: data.message,
+          sender:
+            typeof data.sender === "string" && data.sender.trim()
+              ? data.sender.trim()
+              : ""
+        });
+      }
+    });
+
+    renderStars();
+  },
+  (error) => {
+    console.error("Could not load memorial letters:", error);
+    skyLoading.hidden = true;
+    emptySky.hidden = true;
+
+    const errorMessage = document.createElement("p");
+    errorMessage.className = "empty-sky";
+    errorMessage.hidden = false;
+    errorMessage.textContent =
+      "The stars could not be loaded right now. Please refresh the page and try again.";
+
+    starLayer.replaceChildren();
+    starLayer.appendChild(errorMessage);
+  }
+);
+
+// Submit a letter to Firestore
 letterForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const message = messageInput.value.trim();
-  const sender = senderInput.value.trim();
+  if (sendingLetter) {
+    return;
+  }
+
+  const message = letterMessage.value.trim();
+  const sender = anonymousToggle.checked
+    ? ""
+    : senderName.value.trim();
 
   if (!message) {
-    formStatus.textContent = "Write a few words before sending your letter.";
+    setFormStatus("Please write a little something before sending.", "error");
+    letterMessage.focus();
     return;
   }
 
-  if (message.length > 3000 || sender.length > 80) {
-    formStatus.textContent = "Please shorten your letter or signature.";
+  if (message.length > 3000) {
+    setFormStatus("Your letter must be 3,000 characters or fewer.", "error");
     return;
   }
 
-  const submitButton = letterForm.querySelector('[type="submit"]');
-  if (submitButton) submitButton.disabled = true;
+  if (sender.length > 80) {
+    setFormStatus("Please keep your name to 80 characters or fewer.", "error");
+    senderName.focus();
+    return;
+  }
 
-  formStatus.textContent = "Sending your letter…";
+  sendingLetter = true;
+  sendButton.disabled = true;
+  sendButton.textContent = "Sending your letter...";
+  setFormStatus("Sending your letter to the stars...");
+
+  let timeoutId;
 
   try {
-    await addDoc(collection(db, "letters"), {
+    // A server timestamp is required by the Firestore security rules below.
+    const savePromise = addDoc(lettersCollection, {
       message,
       sender,
       createdAt: serverTimestamp()
     });
 
-    letterForm.reset();
-    charCount.textContent = "0";
-    writeDialog.close();
+    // Avoid leaving the form in a loading state indefinitely.
+    // A timeout does not necessarily mean the write failed.
+    const timeoutPromise = new Promise((_, reject) => {
+      timeoutId = window.setTimeout(() => {
+        reject(new Error("SAVE_TIMEOUT"));
+      }, 25000);
+    });
 
-    showToast("Your letter has become a star ✧");
+    await Promise.race([savePromise, timeoutPromise]);
+
+    setFormStatus("Your letter has found its star. Thank you.", "success");
+
+    letterForm.reset();
+    characterCount.textContent = "0 / 3000";
+    senderName.disabled = false;
+    senderName.removeAttribute("aria-label");
+
+    // Firestore's live listener will add the new star.
+    window.setTimeout(() => {
+      letterDialog.close();
+      setFormStatus("");
+    }, 1000);
   } catch (error) {
-    console.error("Could not save letter:", error);
-    formStatus.textContent =
-      "Your letter couldn't be saved. Please try again in a moment.";
+    console.error("Could not save memorial letter:", error);
+
+    if (error.message === "SAVE_TIMEOUT") {
+      setFormStatus(
+        "This is taking longer than expected. Check whether your letter appears in the sky before trying again, so you don't accidentally send it twice.",
+        "error"
+      );
+    } else if (error.code === "permission-denied") {
+      setFormStatus(
+        "The memorial's database permissions are not ready yet. Please try again later.",
+        "error"
+      );
+    } else if (
+      error.code === "unavailable" ||
+      error.code === "deadline-exceeded"
+    ) {
+      setFormStatus(
+        "The connection seems unavailable. Please check your internet and try again.",
+        "error"
+      );
+    } else {
+      setFormStatus(
+        "We couldn't save your letter just now. Please try again in a moment.",
+        "error"
+      );
+    }
   } finally {
-    if (submitButton) submitButton.disabled = false;
+    window.clearTimeout(timeoutId);
+    sendingLetter = false;
+    sendButton.disabled = false;
+
+    const buttonIcon = document.createElement("span");
+    buttonIcon.setAttribute("aria-hidden", "true");
+    buttonIcon.textContent = "✧";
+
+    sendButton.replaceChildren(
+      buttonIcon,
+      document.createTextNode(" Send this letter to the stars")
+    );
   }
 });
-
-makeDust();
-listenForLetters();
