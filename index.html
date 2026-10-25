@@ -4,95 +4,143 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080d20">
-  <meta name="description" content="A sky of letters and memories for Nihahahaha.">
+  <meta name="theme-color" content="#080b1a">
+  <meta name="description" content="A little corner of the universe for letters, memories, and love for Nihahahaha.">
   <title>For Nihahahaha, Among the Stars</title>
   <link rel="stylesheet" href="style.css">
   <script type="module" src="script.js"></script>
 </head>
+
 <body>
-  <main class="universe">
-    <div class="nebula nebula-one"></div>
-    <div class="nebula nebula-two"></div>
-    <div id="sky" class="sky" aria-label="A sky of letters">
-      <div id="starfield" class="starfield"></div>
-    </div>
+  <div id="starfield" aria-hidden="true"></div>
 
-    <header class="topbar">
-      <a class="brand" href="#" aria-label="Return to the sky">
-        <span class="brand-star">✧</span> A SKY FOR NIHHAHAHAHA
-      </a>
-      <button id="explore-button" class="text-button" type="button">
-        Explore the sky ↗
-      </button>
-    </header>
+  <main class="memorial">
+    <header class="hero">
+      <p class="eyebrow">A LITTLE CORNER OF THE UNIVERSE</p>
 
-    <section class="intro">
-      <p class="eyebrow">A PLACE FOR EVERYTHING LEFT UNSAID</p>
-      <h1>For Nihahahaha,<br><span>among the stars.</span></h1>
+      <h1>For Nihahahaha, <span>among the stars.</span></h1>
+
       <p class="opening">
         The stars she loved so much, we hope, she's amongst them,
-        that they are keeping her warm.
+        that they are keeping her warm..
       </p>
-      <div class="ornament"><span></span> ✦ <span></span></div>
-      <p class="invitation">
-        Every star holds a letter. Every letter holds a piece of her.
+
+      <p class="intro">
+        Some people leave the world, but never really leave us.
+        Leave her a letter here. Let it become a little light in her sky.
       </p>
-      <button id="write-button" class="primary-button" type="button">
-        <span>✧</span> Write her a letter
-      </button>
-      <p class="hint">Choose a star to discover a letter left for her.</p>
+
+      <div class="hero-actions">
+        <button class="primary-button" id="write-button" type="button">
+          Write her a letter <span aria-hidden="true">✧</span>
+        </button>
+
+        <button class="text-button" id="explore-button" type="button">
+          Explore the stars
+        </button>
+      </div>
+
+      <p class="star-total">
+        <span id="star-count">0</span>
+        <span id="star-label">letters resting in her sky</span>
+      </p>
+    </header>
+
+    <section class="sky-section" aria-label="Letters for Nihahahaha">
+      <div id="sky" class="sky">
+        <p class="sky-hint" id="sky-hint">
+          Each light holds a letter. Choose a star to read one.
+        </p>
+      </div>
     </section>
 
-    <div class="sky-caption" aria-hidden="true">
-      SOMEWHERE, YOUR WORDS ARE STILL REACHING HER
-    </div>
-
-    <section class="memory-count" aria-live="polite">
-      <span id="star-count">0</span>
-      <span>letters shining in her sky</span>
-    </section>
+    <p class="closing">
+      Wherever you are, may you always be surrounded by warmth.
+      <span aria-hidden="true">✦</span>
+    </p>
 
     <footer>
-      Made of love, memories, and everything we wish we could say.
+      Made with love, for a light that never left us.
     </footer>
   </main>
 
+  <p id="toast" class="toast" role="status" aria-live="polite"></p>
+
+  <!-- Read a letter -->
   <dialog id="letter-dialog" class="dialog">
-    <button class="close-button" id="close-letter" aria-label="Close letter" type="button">×</button>
-    <p class="eyebrow">A LETTER FOR NIHHAHAHAHA</p>
-    <div class="letter-star">✦</div>
-    <h2 id="letter-title">A letter to you</h2>
+    <button
+      class="close-button"
+      id="close-letter"
+      type="button"
+      aria-label="Close letter"
+    >×</button>
+
+    <p class="dialog-eyebrow">A LETTER AMONG THE STARS</p>
+    <h2 id="letter-title">A letter for you</h2>
+    <div class="letter-divider" aria-hidden="true">✧</div>
     <p id="letter-message" class="letter-message"></p>
-    <p id="letter-signature" class="signature"></p>
-    <p class="letter-footnote">Held here, beneath the same sky.</p>
+    <p id="letter-signature" class="letter-signature"></p>
   </dialog>
 
+  <!-- Write a letter -->
   <dialog id="write-dialog" class="dialog write-dialog">
-    <button class="close-button" id="close-write" aria-label="Close form" type="button">×</button>
-    <p class="eyebrow">TAKE YOUR TIME</p>
-    <h2>Dear Nihahahaha,</h2>
-    <p class="form-intro">Whatever you wish you could tell her, there is room for it here.</p>
+    <button
+      class="close-button"
+      id="close-write"
+      type="button"
+      aria-label="Close form"
+    >×</button>
+
+    <p class="dialog-eyebrow">LEAVE A LITTLE LIGHT</p>
+    <h2>Write her a letter.</h2>
+    <p class="form-intro">
+      Write whatever your heart wants to say. You can sign your name
+      or let your letter remain anonymous.
+    </p>
 
     <form id="letter-form">
       <label for="sender">Your name <span>(optional)</span></label>
-      <input id="sender" name="sender" maxlength="80" placeholder="Someone who remembers you">
+      <input
+        id="sender"
+        name="sender"
+        type="text"
+        maxlength="80"
+        placeholder="Your name, or leave this empty"
+        autocomplete="name"
+      >
 
       <label for="message">Your letter</label>
-      <textarea id="message" name="message" rows="7" maxlength="3000"
-        placeholder="If I could tell you one more thing..." required></textarea>
-      <p class="character-count"><span id="char-count">0</span> / 3000</p>
+      <textarea
+        id="message"
+        name="message"
+        rows="6"
+        maxlength="3000"
+        placeholder="If you could tell her one thing..."
+        required
+      ></textarea>
+
+      <div class="form-meta">
+        <span>Written with love</span>
+        <span><span id="char-count">0</span>/3000</span>
+      </div>
+
+      <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
 
       <button class="primary-button submit-button" type="submit">
-        Let your letter become a star ✧
+        Send your letter <span aria-hidden="true">✧</span>
       </button>
+
       <p class="privacy-note">
-        This is a local preview. Letters are not yet saved online or shared with other visitors.
+        Your letter will be published on this memorial and can be read
+        by anyone who visits.
       </p>
-      <p id="form-status" class="form-status" role="status"></p>
     </form>
   </dialog>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <noscript>
+    <p class="noscript-message">
+      This memorial needs JavaScript enabled to display and send letters.
+    </p>
+  </noscript>
 </body>
 </html>
