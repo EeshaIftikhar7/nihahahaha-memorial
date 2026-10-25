@@ -1,12 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080b1c">
-  <meta name="description" content="A sky full of letters and love for Nihahaha.">
-  <title>For Nihahaha, Among the Stars</title>
+  <meta name="theme-color" content="#080b1b">
+  <title>For Niha, Among the Stars</title>
+  <meta name="description" content="A little corner of the universe for Niha. Leave a letter among the stars, and read the words others have left for her.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -14,182 +13,138 @@
   <script type="module" src="script.js"></script>
 </head>
 <body>
-  <main class="page">
-    <header class="topbar">
-      <a class="site-mark" href="#" id="homeLogo">
-        <span class="logo-star">✦</span> For Nihahaha
-      </a>
+  <div class="background-glow" aria-hidden="true"></div>
 
-      <nav class="navigation" aria-label="Main navigation">
-        <button class="nav-tab active" id="starsTab" type="button" aria-current="page">
-          The Stars
-        </button>
-        <button class="nav-tab" id="aboutTab" type="button">
-          Our Love Letter
-        </button>
-      </nav>
-    </header>
+  <header class="site-header">
+    <a class="brand" href="#" id="brandHome" aria-label="Return to the stars">
+      <span class="brand-star" aria-hidden="true">✦</span>
+      <span>For Niha</span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <button class="nav-link active" id="starsTab" type="button" aria-controls="homeView" aria-selected="true">The Stars</button>
+      <button class="nav-link" id="loveLetterTab" type="button" aria-controls="aboutView" aria-selected="false">Our Love Letter</button>
+    </nav>
+  </header>
 
-    <!-- HOME: the living sky -->
-    <section id="homeView" class="view active-view">
-      <div class="hero-stage">
-        <div class="star-layer" id="starLayer" aria-label="Letters to Nihahaha"></div>
+  <main>
+    <section class="home-view" id="homeView">
+      <div class="hero-stage" id="heroStage">
+        <div class="star-layer" id="starLayer" aria-label="Letters left among the stars"></div>
 
         <div class="hero-content">
-          <p class="eyebrow">✧ FOREVER IN OUR UNIVERSE ✧</p>
-          <h1>For Nihahaha,<br><em>among the stars.</em></h1>
-
-          <p class="opening-line">
-            The stars she loved so much, we hope, she's amongst them,
-            that they are keeping her warm..
-          </p>
-
-          <p class="intro-copy">
-            Every star in this sky holds a letter for her.
-            A memory, a thought, a little piece of love that still has
-            somewhere to go.
-          </p>
-
-          <button class="primary-button" id="writeLetterButton" type="button">
-            <span aria-hidden="true">✧</span> Leave her a letter
-          </button>
-          <p class="gentle-note">Write from the heart. We'll give your words a star.</p>
+          <p class="eyebrow"><span class="eyebrow-star" aria-hidden="true">✧</span> A LITTLE CORNER OF THE UNIVERSE</p>
+          <h1>The stars she loved<br><em>so much.</em></h1>
+          <p class="opening-line">The stars she loved so much, we hope, she's amongst them, that they are keeping her warm..</p>
+          <p class="hero-description">If you miss her, leave a little love here. Every letter becomes a star, held gently among the others.</p>
+          <button class="primary-button" id="writeLetterButton" type="button"><span aria-hidden="true">✦</span> Leave a letter for Niha</button>
+          <p class="sky-hint" id="skyHint">Every star holds a letter. Choose one to read.</p>
+          <p class="connection-status" id="connectionStatus" role="status" aria-live="polite">Finding the stars…</p>
         </div>
 
-        <p class="sky-loading" id="skyLoading">Gathering the stars...</p>
-        <p class="empty-sky" id="emptySky" hidden>
-          The sky is waiting for its first letter.<br>
-          <span>Leave her a little light.</span>
-        </p>
-
-        <div class="star-count">
-          <span aria-hidden="true">✦</span>
-          <span id="letterCount">0</span>
-          <span id="starLabel">letters in her sky</span>
+        <div class="empty-sky" id="emptySky" hidden>
+          <span aria-hidden="true">✧</span>
+          <p>The first letter can become a star.</p>
         </div>
       </div>
 
-      <p class="sky-instruction">
-        Every star is a letter. Choose one to read what someone wanted to tell her.
-      </p>
+      <section class="invitation">
+        <span class="invitation-star" aria-hidden="true">✧</span>
+        <p>Some love has nowhere to go, so we send it into the sky.</p>
+        <button class="text-button" id="writeLetterButtonBottom" type="button">Leave your words here <span aria-hidden="true">↗</span></button>
+      </section>
     </section>
 
- <section id="aboutView" class="about-view" hidden>
-  <div class="about-inner">
-
-    <p class="about-eyebrow">A LOVE LETTER TO NIHA</p>
-
-    <h2 class="about-title">Four hearts, one love.</h2>
-
-    <p class="about-intro">
-      We made this little corner of the universe for you, Niha.
-      A place for our words, our memories, and all the love that
-      still has nowhere to go but towards you.
-      These are our little letters to you, and to anyone who comes
-      here carrying love for someone they miss.
-    </p>
-
-    <div class="friends-notes">
-
-      <article class="friend-note">
-        <span class="note-star" aria-hidden="true">✦</span>
-        <h3>Eesha</h3>
-        <p class="note-message">
-          My dearest Niha, this little space is one way I can keep
-          talking to you. There are things love doesn't know how to
-          stop saying, even when someone is no longer here to hear them.
-          So here are some of my words, saved among the stars for you.
+    <section class="about-view" id="aboutView" hidden>
+      <div class="about-inner">
+        <p class="about-eyebrow">A LOVE LETTER TO NIHA</p>
+        <h2 class="about-title">Four hearts, one love.</h2>
+        <p class="about-intro">
+          We made this little corner of the universe for you, Niha.
+          A place for our words, our memories, and all the love that still has
+          nowhere to go but towards you. These are our little letters to you,
+          and to anyone who comes here carrying love for someone they miss.
         </p>
-        <span class="note-signature">With love, Eesha</span>
-      </article>
 
-      <article class="friend-note">
-        <span class="note-star" aria-hidden="true">✦</span>
-        <h3>Mahnoor</h3>
-        <p class="note-message">
-          Mahnoor's personal letter to Niha will be added here.
-        </p>
-        <span class="note-signature">With love, Mahnoor</span>
-      </article>
+        <div class="friends-notes">
+          <article class="friend-note">
+            <span class="note-star" aria-hidden="true">✦</span>
+            <h3>Eesha</h3>
+            <p class="note-message">My dearest Niha, this little space is one way I can keep talking to you. There are things love doesn't know how to stop saying, even when someone is no longer here to hear them. So here are some of my words, saved among the stars for you.</p>
+            <span class="note-signature">With love, Eesha</span>
+          </article>
 
-      <article class="friend-note">
-        <span class="note-star" aria-hidden="true">✦</span>
-        <h3>Rida</h3>
-        <p class="note-message">
-          Rida's personal letter to Niha will be added here.
-        </p>
-        <span class="note-signature">With love, Rida</span>
-      </article>
+          <article class="friend-note">
+            <span class="note-star" aria-hidden="true">✦</span>
+            <h3>Mahnoor</h3>
+            <p class="note-message">Mahnoor's personal letter to Niha will be added here.</p>
+            <span class="note-signature">With love, Mahnoor</span>
+          </article>
 
-      <article class="friend-note">
-        <span class="note-star" aria-hidden="true">✦</span>
-        <h3>Zainab</h3>
-        <p class="note-message">
-          Zainab's personal letter to Niha will be added here.
-        </p>
-        <span class="note-signature">With love, Zainab</span>
-      </article>
+          <article class="friend-note">
+            <span class="note-star" aria-hidden="true">✦</span>
+            <h3>Rida</h3>
+            <p class="note-message">Rida's personal letter to Niha will be added here.</p>
+            <span class="note-signature">With love, Rida</span>
+          </article>
 
-    </div>
+          <article class="friend-note">
+            <span class="note-star" aria-hidden="true">✦</span>
+            <h3>Zainab</h3>
+            <p class="note-message">Zainab's personal letter to Niha will be added here.</p>
+            <span class="note-signature">With love, Zainab</span>
+          </article>
+        </div>
 
-    <div class="our-signoff">
-      <span class="signoff-star" aria-hidden="true">✧</span>
-      <p class="signoff-line">And from all of us, always.</p>
-      <h3>Eesha · Mahnoor · Rida · Zainab</h3>
-      <p class="signoff-dedication">For Niha, among the stars.</p>
-    </div>
-
-  </div>
-</section>
-
-  <!-- Write a letter -->
-  <dialog class="letter-dialog" id="letterDialog" aria-labelledby="writeTitle">
-    <button class="dialog-close" id="closeWrite" type="button" aria-label="Close">×</button>
-    <p class="eyebrow">A MESSAGE TO THE STARS</p>
-    <h2 id="writeTitle">What would you like<br>to tell her?</h2>
-    <p class="dialog-intro">
-      A memory, a little update, something you miss, or words you never
-      got to say. There is room for all of it here.
-    </p>
-
-    <form id="letterForm">
-      <label for="letterMessage">Your letter</label>
-      <textarea id="letterMessage" maxlength="3000" rows="6"
-        placeholder="Dear Nihahaha..." required></textarea>
-
-      <div class="character-row">
-        <span>Write from the heart.</span>
-        <span id="characterCount">0 / 3000</span>
+        <div class="our-signoff">
+          <span class="signoff-star" aria-hidden="true">✧</span>
+          <p class="signoff-line">And from all of us, always.</p>
+          <h3>Eesha · Mahnoor · Rida · Zainab</h3>
+          <p class="signoff-dedication">For Niha, among the stars.</p>
+        </div>
       </div>
+    </section>
+  </main>
 
-      <label for="senderName">Your name <span class="optional">(optional)</span></label>
-      <input id="senderName" type="text" maxlength="80"
-        placeholder="What should we call you?" autocomplete="name">
+  <footer class="site-footer">
+    <span aria-hidden="true">✦</span>
+    <p>Made with love, for Niha.</p>
+  </footer>
 
-      <label class="anonymous-option" for="anonymousToggle">
-        <input id="anonymousToggle" type="checkbox">
-        <span class="custom-checkbox" aria-hidden="true"></span>
-        <span>I'd rather leave this letter anonymously</span>
+  <dialog class="letter-dialog" id="composeDialog" aria-labelledby="composeTitle">
+    <form class="dialog-content" id="letterForm">
+      <button class="dialog-close" type="button" data-close-dialog="composeDialog" aria-label="Close">×</button>
+      <p class="dialog-eyebrow">A LETTER TO THE STARS</p>
+      <h2 id="composeTitle">What would you like to tell her?</h2>
+      <p class="dialog-intro">Write whatever your heart needs to say. Your words will become a star in Niha's sky.</p>
+
+      <label class="field-label" for="letterMessage">Your letter</label>
+      <textarea id="letterMessage" name="message" maxlength="3000" rows="7" placeholder="Dear Niha..." required></textarea>
+      <div class="character-count"><span id="characterCount">0</span> / 3000</div>
+
+      <label class="field-label" for="letterSender">Your name <span class="optional-label">(optional)</span></label>
+      <input id="letterSender" name="sender" type="text" maxlength="80" placeholder="Your name, if you'd like to share it">
+
+      <label class="anonymous-option">
+        <input type="checkbox" id="anonymousCheckbox">
+        <span>I'd like to leave this letter anonymously</span>
       </label>
 
-      <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
-
-      <button class="primary-button submit-button" id="sendButton" type="submit">
-        <span aria-hidden="true">✧</span> Send this letter to the stars
-      </button>
-      <button class="text-button" id="cancelWrite" type="button">Maybe later</button>
+      <p class="form-message" id="formMessage" role="status" aria-live="polite"></p>
+      <button class="primary-button submit-button" id="sendLetterButton" type="submit"><span aria-hidden="true">✦</span> Send this letter to the stars</button>
+      <p class="privacy-note">Once submitted, your letter will be visible to visitors of this memorial.</p>
     </form>
   </dialog>
 
-  <!-- Read a letter by clicking its star -->
-  <dialog class="letter-dialog read-dialog" id="readDialog" aria-labelledby="readHeading">
-    <button class="dialog-close" id="closeRead" type="button" aria-label="Close">×</button>
-    <p class="eyebrow">A LETTER AMONG THE STARS</p>
-    <h2 id="readHeading">Words from the heart</h2>
-    <div class="letter-divider" aria-hidden="true">✦ · ✧ · ✦</div>
-    <p class="read-letter-text" id="readLetterText"></p>
-    <p class="letter-signature" id="readLetterSignature"></p>
-    <button class="text-button" id="closeReadBottom" type="button">Return to the sky</button>
+  <dialog class="letter-dialog read-dialog" id="readDialog" aria-labelledby="readTitle">
+    <div class="dialog-content">
+      <button class="dialog-close" type="button" data-close-dialog="readDialog" aria-label="Close">×</button>
+      <p class="dialog-eyebrow">A LETTER FROM THE SKY</p>
+      <span class="read-star" aria-hidden="true">✦</span>
+      <h2 id="readTitle">A letter for Niha</h2>
+      <p class="read-message" id="readMessage"></p>
+      <p class="read-sender" id="readSender"></p>
+      <button class="text-button close-read-button" type="button" data-close-dialog="readDialog">Keep it among the stars <span aria-hidden="true">✧</span></button>
+    </div>
   </dialog>
 </body>
 </html>
