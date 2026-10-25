@@ -610,3 +610,157 @@ h1 em { color: var(--gold); font-weight: 400; }
   top: auto;
   bottom: 55px;
 }
+
+/* Our Love Letter: four personal notes */
+
+.about-view {
+  min-height: 100vh;
+  padding: 70px 24px 90px;
+}
+
+.about-inner {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.about-eyebrow {
+  color: #d9bc7d;
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.about-title {
+  color: #f6ebd1;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.2rem, 6vw, 3.8rem);
+  font-weight: normal;
+  line-height: 1.15;
+  text-align: center;
+  margin: 0 0 24px;
+}
+
+.about-intro {
+  max-width: 650px;
+  margin: 0 auto 48px;
+  color: #d4d0dc;
+  font-size: 1rem;
+  line-height: 1.9;
+  text-align: center;
+}
+
+.friends-notes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.friend-note {
+  position: relative;
+  padding: 30px 28px;
+  border: 1px solid rgba(217, 188, 125, 0.28);
+  border-radius: 16px;
+  background: rgba(25, 27, 51, 0.72);
+  transition: border-color 0.3s ease,
+              transform 0.3s ease,
+              background 0.3s ease;
+}
+
+.friend-note:hover {
+  border-color: rgba(217, 188, 125, 0.7);
+  background: rgba(30, 32, 57, 0.9);
+  transform: translateY(-3px);
+}
+
+.note-star {
+  display: block;
+  color: #e7c98a;
+  font-size: 1.25rem;
+  margin-bottom: 14px;
+}
+
+.friend-note h3 {
+  color: #f6ebd1;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.55rem;
+  font-weight: normal;
+  margin: 0 0 18px;
+}
+
+.note-message {
+  color: #d4d0dc;
+  font-size: 0.96rem;
+  line-height: 1.9;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  margin: 0 0 24px;
+}
+
+.note-signature {
+  display: block;
+  color: #d9bc7d;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+
+.our-signoff {
+  margin-top: 55px;
+  padding-top: 34px;
+  border-top: 1px solid rgba(217, 188, 125, 0.25);
+  text-align: center;
+}
+
+.signoff-star {
+  display: block;
+  color: #e7c98a;
+  font-size: 1.8rem;
+  margin-bottom: 12px;
+}
+
+.signoff-line {
+  color: #d4d0dc;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  font-style: italic;
+  margin-bottom: 16px;
+}
+
+.our-signoff h3 {
+  color: #f6ebd1;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.15rem, 3vw, 1.6rem);
+  font-weight: normal;
+  letter-spacing: 0.03em;
+  margin: 0 0 12px;
+}
+
+.signoff-dedication {
+  color: #b7b0c8;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 600px) {
+  .about-view {
+    padding: 48px 18px 65px;
+  }
+
+  .friends-notes {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .friend-note {
+    padding: 25px 22px;
+  }
+
+  .about-intro {
+    margin-bottom: 34px;
+  }
+
+  .our-signoff {
+    margin-top: 40px;
+  }
+}
