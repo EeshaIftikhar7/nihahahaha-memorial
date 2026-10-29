@@ -641,3 +641,11 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 #connectionStatus {
   display: none !important;
 }
+
+#starLayer {
+  overflow: hidden;
+}
+
+.star {
+  transform-origin: center;
+}
