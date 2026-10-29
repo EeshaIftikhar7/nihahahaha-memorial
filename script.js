@@ -53,11 +53,12 @@ let sendingLetter = false;
 
 const STAR_GLYPHS = ["✦", "✧", "⋆", "✶", "✴"];
 
+
 const STAR_ZONES = [
-  { x1: 4, x2: 24, y1: 12, y2: 84 },
-  { x1: 76, x2: 96, y1: 12, y2: 84 },
-  { x1: 25, x2: 75, y1: 5, y2: 18 },
-  { x1: 25, x2: 75, y1: 82, y2: 94 }
+  { x1: 8, x2: 34, y1: 18, y2: 78 },
+  { x1: 66, x2: 92, y1: 18, y2: 78 },
+  { x1: 25, x2: 75, y1: 8, y2: 30 },
+  { x1: 25, x2: 75, y1: 70, y2: 92 }
 ];
 
 // Switch between the two tabs.
@@ -264,12 +265,13 @@ function positionForLetter(id, index, total) {
   const col = spread % columns;
   const row = Math.floor(spread / columns) % rows;
 
-  const xFraction =
-    (col + 0.25 + ((hash % 31) / 100)) / columns;
+  
+const xFraction =
+  (col + 0.5 + ((hash % 15) / 100)) / columns;
 
-  const yFraction =
-    (row + 0.3 + (((hash >> 4) & 31) / 100)) / rows;
-
+const yFraction =
+  (row + 0.5 + (((hash >> 4) & 15) / 100)) / rows;
+  
   const x = zone.x1 + Math.min(0.96, xFraction) * xSpan;
   const y = zone.y1 + Math.min(0.96, yFraction) * ySpan;
 
