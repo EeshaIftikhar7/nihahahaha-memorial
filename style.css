@@ -637,3 +637,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
     transition-duration: 0.01ms !important;
   }
 }
+
+#connectionStatus {
+  display: none !important;
+}
