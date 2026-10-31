@@ -244,40 +244,35 @@ function stableNumber(value) {
 }
 
 // Distribute stars around the edges of the sky.
+
 function positionForLetter(id, index, total) {
-  const zone = STAR_ZONES[index % STAR_ZONES.length];
   const hash = stableNumber(id);
-  const spread = Math.floor(index / STAR_ZONES.length);
 
-  const xSpan = zone.x2 - zone.x1;
-  const ySpan = zone.y2 - zone.y1;
-
+  // More columns as the number of letters grows.
   const columns = Math.max(
     1,
-    Math.ceil(Math.sqrt(total / STAR_ZONES.length))
+    Math.ceil(Math.sqrt(total * 1.6))
   );
 
-  const rows = Math.max(
-    1,
-    Math.ceil(total / STAR_ZONES.length / columns)
-  );
+  const rows = Math.max(1, Math.ceil(total / columns));
 
-  const col = spread % columns;
-  const row = Math.floor(spread / columns) % rows;
+  // Newest letters occupy the first row at the top.
+  const col = index % columns;
+  const row = Math.floor(index / columns);
 
-  
-const xFraction =
-  (col + 0.5 + ((hash % 15) / 100)) / columns;
+  // Small variations keep the sky from looking too grid-like.
+  const xJitter = ((hash % 11) - 5) / 100;
+  const yJitter = (((hash >> 4) % 11) - 5) / 100;
 
-const yFraction =
-  (row + 0.5 + (((hash >> 4) & 15) / 100)) / rows;
-  
-  const x = zone.x1 + Math.min(0.96, xFraction) * xSpan;
-  const y = zone.y1 + Math.min(0.96, yFraction) * ySpan;
+  const xFraction = (col + 0.5) / columns + xJitter;
+  const yFraction = (row + 0.5) / rows + yJitter;
+
+  const x = 5 + xFraction * 90;
+  const y = 8 + yFraction * 84;
 
   return {
-    x: Math.max(3, Math.min(97, x)),
-    y: Math.max(4, Math.min(96, y))
+    x: Math.max(4, Math.min(96, x)),
+    y: Math.max(6, Math.min(94, y))
   };
 }
 
